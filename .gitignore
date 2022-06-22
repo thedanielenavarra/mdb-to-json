@@ -1,2 +1,4 @@
 *.mdb
 *.json
+*.tables
+*.log

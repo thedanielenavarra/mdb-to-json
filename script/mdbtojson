@@ -1,0 +1,73 @@
+#!/bin/bash
+
+input="../mdb"
+tablesout="../tables"
+output="../json"
+verbose=false
+logfile="mdbtojson.log"
+
+while getopts ':l:t:i:o:vh' OPTION; do
+	case "$OPTION" in
+		h)
+			echo -e "\nmdbtojson help\n\n-v verbose\n-l logfile\n-t tables output\n-i .mdb files input path\n-o .json files output path\n\n"
+			exit
+			;;
+		l)
+			logfile=$OPRARG
+			echo "Set log file to $logfile"	
+			;;
+		v)
+			verbose=true
+			echo "Starting in verbose mode"
+			;;
+		i)
+			input="$OPTARG"
+			echo "Set input path as $input"
+			;;
+		o)
+			output="$OPTARG"
+			echo "Set output path as $output"
+			;;
+		t)
+			tablesout="$OPTARG"
+			echo "Set .tables files output to $tablesout"
+			;;
+	esac
+done
+
+echo -e "\n----------------\n"$(date) - "Starting mdbtojson with verbose=$verbose input=$input output=$output logfile=$logfile" >> $logfile
+
+if [ ! -d $output ]
+then
+	if ($verbose); then
+		echo "Folder $output does not exist, creating it..."
+		mkdir $output
+	fi
+fi
+
+if [ ! -d $tablesout ]
+then
+        if ($verbose); then
+                echo "Folder $tablesout does not exist, creating it..."
+                mkdir $tablesout
+        fi
+fi
+ls $input -1 |grep .mdb | while read f 
+do
+	mdb-tables "$input/$f" -1 > $tablesout/${f/mdb}tables
+	echo $(date) - "File: $input/$f" >> $logfile
+	if ($verbose); then
+		echo "File: $f"
+	fi
+	mdb-tables $input/$f -1 | while read line
+	do
+		jsonfile=$output/${f/mdb}$line.json	
+		echo $(date) - "Reading from $f table $line and writing $jsonfile" >> $logfile
+		if ($verbose); then
+			echo "Reading from $f table $line and writing $jsonfile"
+		fi
+		mdb-json $input/$f $line > $jsonfile
+	done
+done
+
+echo -e "\nExecution completed" >> $logfile
