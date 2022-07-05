@@ -1,9 +1,97 @@
 #!/usr/bin/python3
 
+from inspect import getfile
 from tkinter import *
 import os
 import sys
 from tkinter import filedialog
+from os import walk
+
+
+def getfiles(path, extension):
+    files = []
+    for (dirpath, dirnames, filenames) in walk(path):
+        files.extend(filenames)
+        break
+    return [f for f in files if f.endswith(extension)]
+
+def gettables(db):
+    tables = []
+    db=open(db, 'r')
+    for line in db:
+        tables.append(line[:-1])
+    db.close()
+    return tables
+
+class Read:
+    def readtable(o):
+        f=open(o.data["json"]+"/"+o.selectedDB[:-6]+o.selectedTable+".json", "r")
+        print(f.read())
+
+
+    def chgdb(o):
+        if(len(o.LL_db.curselection())>0):
+            o.selectedDB=o.LL_db.get(o.LL_db.curselection())
+            o.LL_tables.delete(0,END)
+            tables=gettables(o.data["tables"]+o.selectedDB)
+            for t in tables:
+                o.LL_tables.insert(END,t)
+
+    def chgtables(o):
+        o.selectedTable=o.LL_tables.get(o.LL_tables.curselection())
+        o.readtable()
+        
+
+    def read(o):
+        o.data["json"]=o.E_i.get()
+        o.data["tables"]=o.E_t.get()
+        o.tables=getfiles(o.data["tables"], ".tables")
+        o.json=getfiles(o.data["json"], ".json")
+        o.LL_db.delete(0,END)
+        o.LL_tables.delete(0,END)
+        for f in o.tables:
+            o.LL_db.insert(END,f[:])
+        
+    def browse(o, key):
+        o.data[key]=filedialog.askdirectory(initialdir = "/",title = "Select input (."+key+") directory")
+        if key=="json":
+            o.E_i.delete(0,END)
+            o.E_i.insert(0,o.data[key])
+        elif key=="tables":
+            o.E_t.delete(0,END)
+            o.E_t.insert(0,o.data[key])
+    def __init__(o):
+        o.data={}
+        o.tables=[]
+        o.json=[]
+        o.selectedDB=0
+        o.selectedTable=0
+        o.root=Tk()
+        o.L_i=Label(o.root,text="JSON path:")
+        o.L_i.grid(row=0,column=0)
+        o.E_i=Entry(o.root)
+        o.E_i.grid(row=0,column=1)
+        o.B_i=Button(o.root,text="Browse",command=lambda:o.browse("json"))
+        o.B_i.grid(row=0,column=2)
+        o.L_t=Label(o.root,text="Tables path:")
+        o.L_t.grid(row=1,column=0)
+        o.E_t=Entry(o.root)
+        o.E_t.grid(row=1,column=1)
+        o.B_t=Button(o.root,text="Browse",command=lambda:o.browse("tables"))
+        o.B_t.grid(row=1,column=2)
+        o.B_read=Button(o.root,text="Read",command=lambda:o.read())
+        o.B_read.grid(row=2,column=1)
+        o.LL_db=Listbox(o.root)
+        o.LL_db.bind("<<ListboxSelect>>",lambda event:o.chgdb())
+        o.LL_db.grid(row=3,column=0)
+        o.LL_tables=Listbox(o.root)
+        o.LL_tables.grid(row=3,column=1)
+        o.LL_tables.bind("<<ListboxSelect>>",lambda event:o.chgtables())
+        o.root.mainloop()
+
+
+
+
 
 class Parse:
     def browse(o, key):
@@ -69,12 +157,12 @@ class Parse:
 
 class Mdbtojson:
     def parse(o):
-        print("PARSE")
         o.root.destroy()
         o.parseForm=Parse()
 
     def read(o):
-        print("READ")
+        o.root.destroy()
+        o.readForm=Read()
     def __init__(o):
         o.root=Tk()
         o.root.title("MDB to JSON")
