@@ -5,7 +5,7 @@ Bash script to automate the parsing process of tables from multiple .mdb files t
 
 * [mdbtools](https://github.com/mdbtools/mdbtools)
 
-* Enought Unix skills to check if you're in the right path (tip: the script is located in /script)
+* Enought Unix skills to check if you're in the right path (tip: the script is located in ./script)
 
 ### Usage: ###
 
