@@ -6,14 +6,14 @@ output="../json"
 verbose=false
 logfile="mdbtojson.log"
 
-while getopts ':l:t:i:o:vh' OPTION; do
+while getopts 'l:t:i:o:vh' OPTION; do
 	case "$OPTION" in
 		h)
 			echo -e "\nmdbtojson help\n\n-v verbose\n-l logfile\n-t tables output\n-i .mdb files input path\n-o .json files output path\n\n"
 			exit
 			;;
 		l)
-			logfile="$OPTRARG"
+			logfile="$OPTARG"
 			echo "Set log file to $logfile"	
 			;;
 		v)
