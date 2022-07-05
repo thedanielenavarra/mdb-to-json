@@ -13,7 +13,7 @@ while getopts ':l:t:i:o:vh' OPTION; do
 			exit
 			;;
 		l)
-			logfile=$OPRARG
+			logfile="$OPTRARG"
 			echo "Set log file to $logfile"	
 			;;
 		v)
