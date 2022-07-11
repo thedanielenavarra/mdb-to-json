@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
-from inspect import getfile
-from tkinter import *
 import os
 import sys
-from tkinter import filedialog
+import json
 from os import walk
+from tkinter import *
+from inspect import getfile
+from tkinter import filedialog
+from tkinter.ttk import Treeview
 
 
 def getfiles(path, extension):
@@ -25,8 +27,33 @@ def gettables(db):
 
 class Read:
     def readtable(o):
-        f=open(o.data["json"]+"/"+o.selectedDB[:-6]+o.selectedTable+".json", "r")
-        print(f.read())
+        fn=o.data["json"]+"/"+o.selectedDB[:-6]+o.selectedTable+".json"
+        print("File name: "+fn)
+        f=open(fn, "r")
+        l=0
+        ll=0
+        arr=[]
+        varr=[]
+        o.T_d.delete(*o.T_d.get_children())
+        for line in f:
+            arr=json.loads(line)
+            if l==0:
+                o.T_d["columns"]=[0]*len(arr)
+                print("Added columns: "+str(len(arr)))
+            for k in arr:
+                varr.append(arr[k])
+                if l==0:
+                    o.T_d.column("#"+str(ll+1), anchor="w")
+                    o.T_d.heading("#"+str(ll+1), text=k)
+                    print("Adding key: "+k)
+                    ll+=1
+            if l==0:
+                print("Adding row: "+str(tuple(varr)))
+                print("From json: ", arr)
+            l+=1
+            o.T_d.insert("", "end", values=tuple(varr))
+            varr=[]
+                
 
 
     def chgdb(o):
@@ -38,8 +65,9 @@ class Read:
                 o.LL_tables.insert(END,t)
 
     def chgtables(o):
-        o.selectedTable=o.LL_tables.get(o.LL_tables.curselection())
-        o.readtable()
+        if(len(o.LL_tables.curselection())>0):
+            o.selectedTable=o.LL_tables.get(o.LL_tables.curselection())
+            o.readtable()
         
 
     def read(o):
@@ -86,7 +114,11 @@ class Read:
         o.LL_db.grid(row=3,column=0)
         o.LL_tables=Listbox(o.root)
         o.LL_tables.grid(row=3,column=1)
+        o.T_d=Treeview(o.root)
+        o.T_d.grid(row=3,column=2)
         o.LL_tables.bind("<<ListboxSelect>>",lambda event:o.chgtables())
+        o.E_i.insert(0, "/home/daniele/trash/mdbToJSON/JSON")
+        o.E_t.insert(0, "/home/daniele/trash/mdbToJSON/")
         o.root.mainloop()
 
 
