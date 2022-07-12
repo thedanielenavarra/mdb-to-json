@@ -43,12 +43,12 @@ class Read:
             for k in arr:
                 varr.append(arr[k])
                 if l==0:
-                    o.T_d.column("#"+str(ll+1), anchor="w")
+                    o.T_d.column("#"+str(ll+1), width=10, stretch=NO, anchor=LEFT)
                     o.T_d.heading("#"+str(ll+1), text=k)
                     print("Adding key: "+k)
                     ll+=1
             if l==0:
-                print("Adding row: "+str(tuple(varr)))
+                print("Adding row: ", tuple(varr))
                 print("From json: ", arr)
             l+=1
             o.T_d.insert("", "end", values=tuple(varr))
