@@ -43,7 +43,7 @@ class Read:
             for k in arr:
                 varr.append(arr[k])
                 if l==0:
-                    o.T_d.column("#"+str(ll+1), width=10, stretch=NO, anchor=LEFT)
+                    o.T_d.column("#"+str(ll+1), anchor="w")
                     o.T_d.heading("#"+str(ll+1), text=k)
                     print("Adding key: "+k)
                     ll+=1
@@ -117,8 +117,8 @@ class Read:
         o.T_d=Treeview(o.root)
         o.T_d.grid(row=3,column=2)
         o.LL_tables.bind("<<ListboxSelect>>",lambda event:o.chgtables())
-        o.E_i.insert(0, "./json")
-        o.E_t.insert(0, "./tables")
+        o.E_i.insert(0, "../json")
+        o.E_t.insert(0, "../tables/")
         o.root.mainloop()
 
 
