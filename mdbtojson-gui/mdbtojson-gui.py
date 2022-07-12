@@ -117,8 +117,8 @@ class Read:
         o.T_d=Treeview(o.root)
         o.T_d.grid(row=3,column=2)
         o.LL_tables.bind("<<ListboxSelect>>",lambda event:o.chgtables())
-        o.E_i.insert(0, "/home/daniele/trash/mdbToJSON/JSON")
-        o.E_t.insert(0, "/home/daniele/trash/mdbToJSON/")
+        o.E_i.insert(0, "./json")
+        o.E_t.insert(0, "./tables")
         o.root.mainloop()
 
 
