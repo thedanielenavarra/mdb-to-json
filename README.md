@@ -7,11 +7,9 @@ Bash script to automate the parsing process of tables from multiple .mdb files t
 
 * Enought Unix skills to check if you're in the right path (tip: the script is located in ./script)
 
-### Usage: ###
-
-./mdbtojson
-
-### Help: ###
+#
+## Usage: ##
+### ./mdbtojson from terminal ###
 
 ```
 mdbtojson help
@@ -22,3 +20,11 @@ mdbtojson help
 -i .mdb files input path
 -o .json files output path
 ```
+
+
+### Or (for a GUI): ###
+
+```
+./mdbtojson-gui/mdbtojson-gui.py
+```
+(Requires Python 3)
