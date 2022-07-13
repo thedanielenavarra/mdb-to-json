@@ -25,6 +25,6 @@ mdbtojson help
 ### Or (for a GUI): ###
 
 ```
-./mdbtojson-gui/mdbtojson-gui.py
+./gui/mdbtojson-gui.py
 ```
 (Requires Python 3)
